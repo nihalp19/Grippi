@@ -144,3 +144,9 @@ async def create_campaign(campaign: CampaignCreate):
     
     # Return the created campaign including its ID
     return {**campaign.dict(), "id": campaign_id}
+
+if __name__ == "__main__":
+    import uvicorn
+
+    port = int(os.environ.get("PORT", 8000))  # Railway will assign PORT env var
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
