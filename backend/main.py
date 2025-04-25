@@ -114,6 +114,7 @@ async def get_campaign(campaign_id: int):
     
     return dict(campaign)
 
+
 @app.post("/campaigns", response_model=Campaign)
 async def create_campaign(campaign: CampaignCreate):
     conn = sqlite3.connect(DB_PATH)
@@ -130,8 +131,3 @@ async def create_campaign(campaign: CampaignCreate):
     
     # Return the created campaign including its ID
     return {**campaign.dict(), "id": campaign_id}
-
-# Run the application with: uvicorn main:app --reload
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
