@@ -4,19 +4,32 @@ from pydantic import BaseModel
 from typing import List, Optional
 import sqlite3
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # Initialize FastAPI app
 app = FastAPI(title="Marketing Campaign API")
 
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+
+print("url",FRONTEND_URL)
+
+origins = [
+    FRONTEND_URL,  # Add your backend URL
+    "http://localhost:5173/",  # React Development URL (Optional, add if needed)
+    "http://localhost",   # Allow all localhost origins
+    "http://127.0.0.1",
+]
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with specific origins
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Database setup
 DB_PATH = "campaigns.db"
 
@@ -59,16 +72,16 @@ def init_db():
     
     if count == 0:
         sample_campaigns = [
-            ("Summer Sale", "Active", 150, 45.99, 1000),
-            ("Black Friday", "Paused", 320, 89.50, 2500),
-            ("Holiday Special", "Active", 215, 62.25, 1750),
-            ("Spring Collection", "Active", 180, 53.75, 1200),
-            ("Clearance Event", "Paused", 95, 32.40, 800),
-            ("Back to School", "Active", 230, 67.80, 1900),
-            ("Winter Sale", "Paused", 175, 49.99, 1350),
-            ("New Year Promotion", "Active", 290, 82.15, 2200),
-            ("Flash Sale", "Paused", 120, 38.60, 950),
-            ("Product Launch", "Active", 350, 95.75, 2800)
+            { id: 1, name: "Summer Sale", status: "Active", clicks: 150, cost: 45.99, impressions: 1000 },
+    { id: 2, name: "Black Friday", status: "Paused", clicks: 320, cost: 89.50, impressions: 2500 },
+    { id: 3, name: "Holiday Special", status: "Active", clicks: 215, cost: 62.25, impressions: 1750 },
+    { id: 4, name: "Spring Collection", status: "Active", clicks: 180, cost: 53.75, impressions: 1200 },
+    { id: 5, name: "Clearance Event", status: "Paused", clicks: 95, cost: 32.40, impressions: 800 },
+    { id: 6, name: "Back to School", status: "Active", clicks: 230, cost: 67.80, impressions: 1900 },
+    { id: 7, name: "Winter Sale", status: "Paused", clicks: 175, cost: 49.99, impressions: 1350 },
+    { id: 8, name: "New Year Promotion", status: "Active", clicks: 290, cost: 82.15, impressions: 2200 },
+    { id: 9, name: "Flash Sale", status: "Paused", clicks: 120, cost: 38.60, impressions: 950 },
+    { id: 10, name: "Product Launch", status: "Active", clicks: 350, cost: 95.75, impressions: 2800 }
         ]
         
         cursor.executemany(

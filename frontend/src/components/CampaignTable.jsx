@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowDown, ArrowUp, TrendingUp, TrendingDown } from 'lucide-react';
 import StatusBadge from './StatusBadge';
+import { campaignStore } from '../store/campaignStore';
 
-function CampaignTable({ campaigns }) {
+function CampaignTable() {
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
+  const { campaigns, setFilter, statusFilter, filteredCampaigns } = campaignStore();
+  const [sortedCampaigns, setSortedCampaigns] = useState([]);
+
+  useEffect(() => {
+    if (filteredCampaigns) {
+      const sorted = [...filteredCampaigns].sort((a, b) => {
+        const aValue = a[sortField];
+        const bValue = b[sortField];
+
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+          return sortDirection === 'asc'
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        } else {
+          return sortDirection === 'asc'
+            ? Number(aValue) - Number(bValue)
+            : Number(bValue) - Number(aValue);
+        }
+      });
+      setSortedCampaigns(sorted);
+    }
+  }, [sortField, sortDirection, filteredCampaigns]);
 
   const handleSort = (field) => {
     if (field === sortField) {
@@ -15,21 +38,6 @@ function CampaignTable({ campaigns }) {
       setSortDirection('asc');
     }
   };
-
-  const sortedCampaigns = [...campaigns].sort((a, b) => {
-    const aValue = a[sortField];
-    const bValue = b[sortField];
-
-    if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc'
-        ? aValue.localeCompare(bValue)
-        : bValue.localeCompare(aValue);
-    } else {
-      return sortDirection === 'asc'
-        ? Number(aValue) - Number(bValue)
-        : Number(bValue) - Number(aValue);
-    }
-  });
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
@@ -108,7 +116,7 @@ function CampaignTable({ campaigns }) {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           <AnimatePresence>
-            {sortedCampaigns.map((campaign) => (
+            {sortedCampaigns?.length > 0 && sortedCampaigns.map((campaign) => (
               <motion.tr
                 key={campaign.id}
                 initial={{ opacity: 0, y: 20 }}
