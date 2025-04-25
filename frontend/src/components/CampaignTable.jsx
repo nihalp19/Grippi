@@ -7,7 +7,7 @@ import { campaignStore } from '../store/campaignStore';
 function CampaignTable() {
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
-  const { campaigns, setFilter, statusFilter, filteredCampaigns } = campaignStore();
+  const {filteredCampaigns } = campaignStore();
   const [sortedCampaigns, setSortedCampaigns] = useState([]);
 
   useEffect(() => {
