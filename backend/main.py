@@ -96,6 +96,11 @@ def init_db():
 init_db()
 
 # API Endpoints
+
+@app.get("/")
+async def root():
+    return {"message": "Backend is running"}
+
 @app.get("/campaigns", response_model=List[Campaign])
 async def get_campaigns(status: Optional[str] = None):
     conn = sqlite3.connect(DB_PATH)
