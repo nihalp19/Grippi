@@ -1,10 +1,10 @@
-import { mockCampaigns } from "../data/mockData";
-// In a real application, this would be an actual API call
-export const fetchCampaigns = async () => {
-  // Simulate API latency
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(mockCampaigns);
-    }, 500);
-  });
-};
+import axios from "axios"
+
+
+export const axiosInstance = axios.create({
+  baseURL : import.meta.env.BACKEND_URL,
+  withCredentials : true
+})
+
+
+
